@@ -27,7 +27,7 @@ export class MenuScene extends Scene {
         return this;
     }
 
-    afterLoad(): Scene {
+    afterLoad(handler: any): Scene {
         this.bgSprite = new PIXI.Sprite(PIXI.loader.resources[this.assets[0]].texture);
         this.bgSprite.width = APP_WIDTH;
         this.bgSprite.height = APP_HEIGHT;
@@ -68,7 +68,7 @@ export class MenuScene extends Scene {
 
         this.sceneLoop();
 
-        return this;
+        return super.afterLoad(handler);
     }
 
     sceneLoop() {
@@ -85,6 +85,6 @@ export class MenuScene extends Scene {
     }
 
     menuStartHandler() {
-        console.log('start');
+        this.outputHandler('start');
     }
 }

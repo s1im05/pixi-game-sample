@@ -36,11 +36,20 @@ export class Game {
                     this.loadingScene.progress = loader.progress;
                 })
                 .load(() => {
-                    this.scene.afterLoad();
+                    this.scene.afterLoad(this.eventHandler.bind(this));
                     this.pixiApp.stage = this.scene.container;
                 });
         } catch (err) {
             console.error(`Faild to load scene (id = ${id | 0})`);
+        }
+    }
+
+    eventHandler(event: string) {
+        switch (event) {
+            case 'start':
+                this.loadScene(1);
+                break;
+            default:
         }
     }
 }

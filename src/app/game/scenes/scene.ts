@@ -4,6 +4,7 @@ export abstract class Scene {
 
     public assets: string[];
     public container: PIXI.Container;
+    public outputHandler: any;
 
     constructor() {
         this.container = new PIXI.Container();
@@ -19,5 +20,8 @@ export abstract class Scene {
         requestAnimationFrame(this.sceneLoop.bind(this));
     }
 
-    abstract afterLoad(): Scene;
+    afterLoad(handler?: any): Scene {
+        this.outputHandler = handler;
+        return this;
+    }
 }
