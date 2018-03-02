@@ -5,6 +5,7 @@ export abstract class Scene {
     public assets: string[];
     public container: PIXI.Container;
     public outputHandler: any;
+    private _destroyed = false;
 
     constructor() {
         this.container = new PIXI.Container();
@@ -17,11 +18,17 @@ export abstract class Scene {
     }
 
     sceneLoop() {
-        requestAnimationFrame(this.sceneLoop.bind(this));
+        if (!this._destroyed) {
+            requestAnimationFrame(this.sceneLoop.bind(this));
+        }
     }
 
     afterLoad(handler?: any): Scene {
         this.outputHandler = handler;
         return this;
+    }
+
+    destroy() {
+        this._destroyed = true;
     }
 }

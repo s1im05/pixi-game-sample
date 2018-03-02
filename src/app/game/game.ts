@@ -26,19 +26,28 @@ export class Game {
 
     loadScene(id: number) {
         try {
+            if (this.scene) {
+                this.scene.destroy();
+            }
+
             const sceneRef = this.sceneList.find(f => f.id === id);
             this.pixiApp.stage = this.loadingScene.container;
             this.scene = new (sceneRef.class);
 
-            PIXI.loader
-                .add(this.scene.assets)
-                .on('progress', (loader, resource) => {
-                    this.loadingScene.progress = loader.progress;
-                })
-                .load(() => {
-                    this.scene.afterLoad(this.eventHandler.bind(this));
-                    this.pixiApp.stage = this.scene.container;
-                });
+            if (this.scene.assets && this.scene.assets.length) {
+                PIXI.loader
+                    .add(this.scene.assets)
+                    .on('progress', (loader, resource) => {
+                        this.loadingScene.progress = loader.progress;
+                    })
+                    .load(() => {
+                        this.scene.afterLoad(this.eventHandler.bind(this));
+                        this.pixiApp.stage = this.scene.container;
+                    });
+            } else {
+                this.scene.afterLoad(this.eventHandler.bind(this));
+                this.pixiApp.stage = this.scene.container;
+            }
         } catch (err) {
             console.error(`Faild to load scene (id = ${id | 0})`);
         }

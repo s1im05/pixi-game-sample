@@ -12,6 +12,7 @@ export class Scene1Scene extends Scene {
     }
 
     afterLoad(handler: any): Scene {
-        return this;
+
+        return super.afterLoad(handler);
     }
 }
