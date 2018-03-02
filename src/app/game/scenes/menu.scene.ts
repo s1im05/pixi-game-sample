@@ -55,7 +55,7 @@ export class MenuScene extends Scene {
         });
 
         this.optionContainer = new PIXI.Container();
-        this.optionContainer.position.y = 300;
+        this.optionContainer.position.y = 350;
         this.optionContainer.visible = false;
 
         this.optionItems.push(
@@ -78,7 +78,7 @@ export class MenuScene extends Scene {
         item.anchor.x = 0.5;
         item.position.set(APP_WIDTH / 2, index * 50);
         item.addListener('mouseover', () => {
-            item.style.fill = 0x000000;
+            item.style.fill = 0xFFFFFF;
         }).addListener('mouseout', () => {
             item.style.fill = this.style.fill;
         });
