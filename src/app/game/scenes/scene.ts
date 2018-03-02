@@ -11,6 +11,13 @@ export abstract class Scene {
         this.container.height = APP_HEIGHT;
     }
 
-    abstract onInit(): Scene;
+    onInit(): Scene {
+        return this;
+    }
+
+    sceneLoop() {
+        requestAnimationFrame(this.sceneLoop.bind(this));
+    }
+
     abstract afterLoad(): Scene;
 }
