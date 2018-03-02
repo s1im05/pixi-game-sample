@@ -1,0 +1,13 @@
+@import "variables";
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: $font-family;
+    canvas {
+        /* cursor: none !important; */
+    }
+}
+

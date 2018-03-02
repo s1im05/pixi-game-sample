@@ -1,0 +1,29 @@
+{
+  "name": "pixi-game-sample",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --progress --colors",
+    "build-production": "webpack -p --progress --colors",
+    "build-watch": " webpack --watch --progress --colors",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vadim Suleimanov",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/pixi.js": "^4.7.1",
+    "core-js": "2.5.1",
+    "css-loader": "^0.28.0",
+    "file-loader": "^0.11.1",
+    "node-sass": "^4.5.2",
+    "pixi.js": "^4.7.0",
+    "sass-loader": "^6.0.3",
+    "script-loader": "^0.7.0",
+    "style-loader": "^0.16.1",
+    "ts-loader": "^2.0.3",
+    "tslint": "^5.7.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.10.0"
+  }
+}
