@@ -7,10 +7,12 @@ export class MenuScene extends Scene {
     bgSprite: PIXI.Sprite;
     titleSprite: PIXI.Sprite;
     menuContainer: PIXI.Container;
+    optionContainer: PIXI.Container;
     menuItems: PIXI.Text[] = [];
+    optionItems: PIXI.Text[] = [];
     style = {
         fontFamily: 'Arial',
-        fontSize: 36,
+        fontSize: 32,
         fill: 0xFF6600,
     };
     assets = [
@@ -40,35 +42,47 @@ export class MenuScene extends Scene {
         this.titleSprite.alpha = 0;
         this.container.addChild(this.titleSprite);
 
-        this.menuContainer = new PIXI.Container;
+        this.menuContainer = new PIXI.Container();
         this.menuContainer.alpha = 0;
         this.menuContainer.position.y = 300;
 
         this.menuItems.push(
             new PIXI.Text('start', this.style).addListener('click', this.menuStartHandler.bind(this)),
-            new PIXI.Text('options', this.style),
+            new PIXI.Text('options', this.style).addListener('click', this.showOptionsHandler.bind(this)),
         );
+        this.menuItems.forEach((item, i) => {
+            this.addMenuItem(item, this.menuContainer, i);
+        });
 
-        let posY = 0;
-        this.menuItems.forEach(item => {
-            item.interactive = true;
-            item.anchor.x = 0.5;
-            item.position.set(APP_WIDTH / 2, posY);
-            item.addListener('mouseover', () => {
-                item.style.fill = 0x000000;
-            }).addListener('mouseout', () => {
-                item.style.fill = this.style.fill;
-            });
+        this.optionContainer = new PIXI.Container();
+        this.optionContainer.position.y = 300;
+        this.optionContainer.visible = false;
 
-            this.menuContainer.addChild(item);
-            posY += 50;
+        this.optionItems.push(
+            new PIXI.Text('back', this.style).addListener('click', this.hideOptionsHandler.bind(this)),
+        );
+        this.optionItems.forEach((item, i) => {
+            this.addMenuItem(item, this.optionContainer, i);
         });
 
         this.container.addChild(this.menuContainer);
+        this.container.addChild(this.optionContainer);
 
         this.sceneLoop();
 
         return super.afterLoad(handler);
+    }
+
+    addMenuItem(item, container, index) {
+        item.interactive = true;
+        item.anchor.x = 0.5;
+        item.position.set(APP_WIDTH / 2, index * 50);
+        item.addListener('mouseover', () => {
+            item.style.fill = 0x000000;
+        }).addListener('mouseout', () => {
+            item.style.fill = this.style.fill;
+        });
+        container.addChild(item);
     }
 
     sceneLoop() {
@@ -86,5 +100,15 @@ export class MenuScene extends Scene {
 
     menuStartHandler() {
         this.outputHandler('start');
+    }
+
+    showOptionsHandler() {
+        this.menuContainer.visible = false;
+        this.optionContainer.visible = true;
+    }
+
+    hideOptionsHandler() {
+        this.menuContainer.visible = true;
+        this.optionContainer.visible = false;
     }
 }
