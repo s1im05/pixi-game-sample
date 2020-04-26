@@ -20,12 +20,9 @@ module.exports = {
                 use: [
                     'style-loader',
                     {
-                        loader: 'css-loader',
-                        options: {
-                            minimize: true
-                        }
+                        loader: 'css-loader'
                     },
-                    'sass-loader?sourceMap'
+                    'sass-loader'
                 ]
             },
             {
