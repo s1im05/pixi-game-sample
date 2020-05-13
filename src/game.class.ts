@@ -1,17 +1,19 @@
 import {ASSET_LEVELS} from "./assets-list.const";
-import {Text, Container, Loader, Application, ApplicationOptions} from 'pixi.js'
+import {Text, Container, Loader, Application, ApplicationOptions} from 'pixi.js';
+import {MenuBricks} from "./menu.class";
 
 
 export class Game {
 
     app: Application;
     options: ApplicationOptions;
+    menu: MenuBricks;
 
     constructor(width: number, height: number) {
         this.options = {
             width,
             height,
-            backgroundColor: 0x000000,
+            backgroundColor: 0xffcc99,
             resolution: window.devicePixelRatio || 1
         }
     }
@@ -46,6 +48,10 @@ export class Game {
     }
 
     showMenu() {
-
+        this.menu = new MenuBricks();
+        this.app.stage = this.menu.levelsMenuContainer();
+        this.menu.onLevelClick((level) => {
+            console.log(level);
+        })
     }
 }
