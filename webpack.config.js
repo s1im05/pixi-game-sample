@@ -10,21 +10,16 @@ module.exports = {
         path: path.resolve(__dirname, './dist/')
     },
     resolve: {
-        extensions:['.ts', '.tsx', '.js'],
+        extensions: ['.ts', '.tsx', '.js'],
         alias: {}
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
     },
     module: {
         rules: [
-            {
-                test: /\.scss$/,
-                use: [
-                    'style-loader',
-                    {
-                        loader: 'css-loader'
-                    },
-                    'sass-loader'
-                ]
-            },
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader'

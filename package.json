@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --progress --colors",
     "build:p": "webpack -p --progress --colors",
-    "build:w": "webpack --watch --progress --colors --mode=production",
+    "build:w": "webpack --watch --progress --colors --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vadim Suleymanov",
@@ -14,13 +14,10 @@
   "devDependencies": {
     "@types/pixi.js": "^4.7.1",
     "core-js": "2.5.1",
-    "css-loader": "^3.5.3",
     "file-loader": "^6.0.0",
-    "node-sass": "^4.14.0",
-    "pixi.js": "^4.7.0",
-    "sass-loader": "^8.0.2",
+    "node-sass": "^4.14.1",
+    "pixi.js": "^5.2.4",
     "script-loader": "^0.7.2",
-    "style-loader": "^1.2.0",
     "ts-loader": "^4.5.0",
     "tslint": "^5.7.0",
     "typescript": "^3.8.3",
