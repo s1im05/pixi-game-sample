@@ -1,7 +1,12 @@
+import {Container} from 'pixi.js';
+
 export class GameBricks {
 
     palette: any[];
+    stage: Container;
 
-    loadImage(asset: any) {
+    setLevel(level: Level): Container {
+       this.stage = new Container();
+       return this.stage;
     }
 }

@@ -1,21 +1,27 @@
 import {ASSET_LEVELS} from "./assets-list.const";
-import {Container, Graphics, Sprite, Texture, SCALE_MODES} from 'pixi.js';
+import {Container, Graphics, Sprite, Text, Texture, SCALE_MODES} from 'pixi.js';
+import {APP, COLOR} from "./app.const";
 
 
 export class MenuBricks {
     readonly levels: Level[] = [
-        {asset: ASSET_LEVELS[0], title: 'first level'}
+        {asset: ASSET_LEVELS[0], preview: ASSET_LEVELS[1], title: 'first level'}
     ];
 
     private levelClickCallback: Function;
 
-
     levelsMenuContainer(): Container {
         const container = new Container();
 
+        const graphics = new Graphics();
+        graphics.beginFill(COLOR.AERO_BLUE, 1);
+        graphics.drawRect(0, 0, APP.WIDTH, APP.HEIGHT);
+        graphics.endFill();
+        container.addChild(graphics);
+
         this.levels.forEach((level: Level) => {
             const sprite = this.levelSprite(level);
-            sprite.setTransform(20, 20, 10, 10);
+            sprite.setTransform(20, 20, 1, 1);
             container.addChild(sprite);
         });
 
@@ -24,31 +30,42 @@ export class MenuBricks {
 
     levelSprite(level: Level): Sprite {
         const sprite = new Sprite();
-        sprite.texture = Texture.from(level.asset, {
+        const size = 100;
+
+        sprite.texture = Texture.from(level.preview, {
             scaleMode: SCALE_MODES.NEAREST,
-            resolution: 100
         });
-        sprite.width = sprite.texture.width;
-        sprite.height = sprite.texture.height;
+        sprite.width = sprite.height = size;
         sprite.buttonMode = true;
         sprite.interactive = true;
 
         const graphics = new Graphics();
-        graphics.lineStyle(1, 0xFFFFFF);
+        graphics.lineStyle(2, COLOR.LIVER);
         graphics.beginFill(0x000000, 0);
-        graphics.drawRect(-0.5, -0.5, sprite.width+1, sprite.height+1);
+        graphics.drawRect(-1, -1, sprite.width + 2, sprite.height + 2);
         graphics.endFill();
-        graphics.alpha = 0.5;
         sprite.addChild(graphics);
+
+        const title = new Text(level.title, {
+            fontFamily: 'Arial',
+            fontSize: 20,
+            fill: COLOR.LIVER,
+            align: 'center',
+        });
+        title.anchor.set(0.5, 0);
+        title.resolution = 2;
+        title.position.set(size / 2, size + 5);
+
+        sprite.addChild(title);
 
         sprite.on('click', () => {
             this.levelClickCallback.call(this, level);
         });
         sprite.on('mouseover', () => {
-            graphics.alpha = 1;
+            sprite.alpha = 0.75;
         });
         sprite.on('mouseout', () => {
-            graphics.alpha = 0.5;
+            sprite.alpha = 1;
         });
         return sprite;
     }
