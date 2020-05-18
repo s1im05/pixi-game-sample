@@ -1,16 +1,20 @@
-import {Container, Graphics} from 'pixi.js';
+import {Container, Graphics, Sprite, Texture} from 'pixi.js';
 import {APP, COLOR} from "./app.const";
+import {ASSET_CELL, ASSET_CELL_EMPTY} from "./assets-list.const";
 
 export class GameBricks {
 
     // palette: any[];
     stage: Container;
     boardContainer: Container;
-    board: number[][]; // rows[cols[]]
+    board: number[];
     level: Level;
     handlerKeypress;
     figureShape: number[][];
     figureCoords: number[];
+
+    spriteFill: Texture;
+    spriteEmpty: Texture;
 
     private _tick: number;
 
@@ -26,10 +30,30 @@ export class GameBricks {
 
     constructor() {
         this.addEventHandlers();
+        this.spriteEmpty = Texture.from(ASSET_CELL_EMPTY);
+        this.spriteFill = Texture.from(ASSET_CELL);
     }
 
     addEventHandlers() {
         document.addEventListener('keypress', this.handlerKeypress = this.keyPress.bind(this));
+    }
+
+    setLevel(level: Level): Container {
+        this.level = level;
+        if (this.stage) this.stage.destroy();
+        this.stage = new Container();
+        this.startGame();
+
+        return this.stage;
+    }
+
+    startGame() {
+        this.resetBoard();
+        // this.addRandomFigure();
+
+        this._tick = window.setInterval(() => {
+            // this.gameTick();
+        }, 300);
     }
 
     resetBoard() {
@@ -39,41 +63,35 @@ export class GameBricks {
         graphics.endFill();
         this.stage.addChild(graphics);
 
+        if (this.boardContainer) {
+            this.boardContainer.destroy();
+        }
         this.boardContainer = new Container();
-        this.board = new Array(this.boardRows).fill(null).map((row, j) => {
-            return new Array(this.boardCols).fill(null).map((col, i) => {
-                const cell = new Graphics();
-                cell.beginFill(this.clearColor, 1);
-                cell.drawRect(0, 0, this.cellSize, this.cellSize);
-                cell.endFill();
-                cell.setTransform(i * (this.cellSize + this.cellGap), j * (this.cellSize + this.cellGap));
-                this.boardContainer.addChild(cell);
 
-                return col;
-            });
-        });
-        this.boardContainer.setTransform(
-            APP.WIDTH / 2 - this.boardContainer.width / 2,
-            APP.HEIGHT / 2 - this.boardContainer.height / 2);
-
+        this.board = new Array(this.boardRows * this.boardCols).fill(null);
         this.stage.addChild(this.boardContainer);
+
+        this.drawBoard();
+        const scale = 0.5;
+        this.boardContainer.setTransform(
+            APP.WIDTH / 2 - this.boardContainer.width / (2 / scale),
+            APP.HEIGHT / 2 - this.boardContainer.height / (2 / scale),
+            scale, scale);
     }
 
-    setLevel(level: Level): Container {
-        this.level = level;
-        this.stage = new Container();
-        this.startGame();
+    drawBoard() {
+        for (let i = 0; i < this.boardRows; i++) {
+            for (let j = 0; j < this.boardCols; j++) {
 
-        return this.stage;
-    }
+                const filled = this.board[i * this.boardCols + j] !== null;
+                const sprite = new Sprite(filled ? this.spriteFill : this.spriteEmpty);
 
-    startGame() {
-        this.resetBoard();
-        this.addRandomFigure();
-
-        this._tick = window.setInterval(() => {
-            this.gameTick();
-        }, 300);
+                sprite.anchor.set(0.5);
+                sprite.x = j * (sprite.width + this.cellGap);
+                sprite.y = i * (sprite.height + this.cellGap);
+                this.boardContainer.addChild(sprite);
+            }
+        }
     }
 
     addRandomFigure() {
@@ -157,7 +175,7 @@ export class GameBricks {
     }
 
     gameTick() {
-        this.figureMoveDown();
+        // this.figureMoveDown();
     }
 
     copyFigureToBoard() {

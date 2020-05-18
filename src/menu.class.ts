@@ -8,33 +8,32 @@ export class MenuBricks {
         {asset: ASSET_LEVELS[0], preview: ASSET_LEVELS[1], title: 'first level'}
     ];
 
+    stage: Container;
     private levelClickCallback: Function;
 
     levelsMenuContainer(): Container {
-        const container = new Container();
+        this.stage = new Container();
 
         const graphics = new Graphics();
         graphics.beginFill(COLOR.AERO_BLUE, 1);
         graphics.drawRect(0, 0, APP.WIDTH, APP.HEIGHT);
         graphics.endFill();
-        container.addChild(graphics);
+        this.stage.addChild(graphics);
 
         this.levels.forEach((level: Level) => {
             const sprite = this.levelSprite(level);
             sprite.setTransform(20, 20, 1, 1);
-            container.addChild(sprite);
+            this.stage.addChild(sprite);
         });
 
-        return container;
+        return this.stage;
     }
 
     levelSprite(level: Level): Sprite {
         const sprite = new Sprite();
         const size = 100;
 
-        sprite.texture = Texture.from(level.preview, {
-            scaleMode: SCALE_MODES.NEAREST,
-        });
+        sprite.texture = Texture.from(level.preview);
         sprite.width = sprite.height = size;
         sprite.buttonMode = true;
         sprite.interactive = true;
@@ -72,5 +71,10 @@ export class MenuBricks {
 
     onLevelClick(callback) {
         this.levelClickCallback = callback;
+    }
+
+    destroy() {
+        this.stage.destroy();
+        this.stage = null;
     }
 }

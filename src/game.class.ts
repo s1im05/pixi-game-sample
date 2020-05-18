@@ -1,4 +1,4 @@
-import {ASSET_CELL, ASSET_LEVELS} from "./assets-list.const";
+import {ASSET_CELL, ASSET_CELL_EMPTY, ASSET_LEVELS} from "./assets-list.const";
 import {Text, Container, Loader, Application, ApplicationOptions} from 'pixi.js';
 import {MenuBricks} from "./menu.class";
 import {COLOR} from "./app.const";
@@ -53,28 +53,35 @@ export class Game {
             loader.add('level' + index, asset);
         });
         loader.add('cell', ASSET_CELL);
+        loader.add('cell_empty', ASSET_CELL_EMPTY);
+
         loader.onComplete.add(callback);
         loader.load();
     }
 
     showMenu() {
+        if (this.game) {
+            this.game.destroy();
+        }
+
         this.menu = new MenuBricks();
-        this.app.stage = this.menu.levelsMenuContainer();
         this.menu.onLevelClick(level => {
-            if (this.game) {
-                this.game.destroy();
-            }
             this.game = new GameBricks();
-            this.app.stage = this.game.setLevel(level);
+            this.game.setLevel(level);
+            this.menu.destroy();
         });
+        this.menu.levelsMenuContainer();
     }
 
     update() {
         this.stats.begin();
 
-        // render
+        if (this.menu && this.menu.stage) {
+            this.app.renderer.render(this.menu.stage);
+        } else if (this.game && this.game.stage) {
+            this.app.renderer.render(this.game.stage);
+        }
 
-        this.app.render();
         this.animationFrame = requestAnimationFrame(this.update.bind(this));
         this.stats.end();
     }
