@@ -12,6 +12,7 @@ export class GameBricks {
     handlerKeypress;
     figureShape: number[][];
     figureCoords: number[];
+    figureColor: number;
 
     spriteFill: Texture;
     spriteEmpty: Texture;
@@ -19,7 +20,6 @@ export class GameBricks {
     private _tick: number;
 
     readonly clearColor = COLOR.AERO_GREEN;
-    readonly cellSize = 30;
     readonly cellGap = 3;
     readonly boardCols = 10;
     readonly boardRows = 20;
@@ -49,10 +49,10 @@ export class GameBricks {
 
     startGame() {
         this.resetBoard();
-        // this.addRandomFigure();
+        this.addRandomFigure();
 
         this._tick = window.setInterval(() => {
-            // this.gameTick();
+            this.gameTick();
         }, 300);
     }
 
@@ -72,7 +72,7 @@ export class GameBricks {
         this.stage.addChild(this.boardContainer);
 
         this.drawBoard();
-        const scale = 0.5;
+        const scale = 3 / 5;
         this.boardContainer.setTransform(
             APP.WIDTH / 2 - this.boardContainer.width / (2 / scale),
             APP.HEIGHT / 2 - this.boardContainer.height / (2 / scale),
@@ -89,6 +89,7 @@ export class GameBricks {
                 sprite.anchor.set(0.5);
                 sprite.x = j * (sprite.width + this.cellGap);
                 sprite.y = i * (sprite.height + this.cellGap);
+                sprite.tint = this.clearColor;
                 this.boardContainer.addChild(sprite);
             }
         }
@@ -98,21 +99,20 @@ export class GameBricks {
         const figure = this.figures[Math.floor(Math.random() * this.figures.length)];
         this.figureCoords = [figure[0][0], figure[0][1]];
         this.figureShape = figure.slice(1);
+        this.figureColor = Math.random() * 0xFFFFFF;
 
         this.drawFigure();
     }
 
     drawFigure(clear?: boolean) {
-        let color = clear ? this.clearColor : COLOR.LIVER;
-
+        const color = clear ? this.clearColor : this.figureColor;
         this.figureShape.forEach(coords => {
             const x = coords[0] + this.figureCoords[0];
             const y = coords[1] + this.figureCoords[1];
 
-            const cell = this.boardContainer.getChildAt(y * this.boardCols + x) as Graphics;
-            cell.beginFill(color, 1);
-            cell.drawRect(0, 0, this.cellSize, this.cellSize);
-            cell.endFill();
+            const cell = this.boardContainer.getChildAt(y * this.boardCols + x) as Sprite;
+            cell.texture = clear ? this.spriteEmpty : this.spriteFill;
+            cell.tint = color;
         });
     }
 
@@ -175,7 +175,7 @@ export class GameBricks {
     }
 
     gameTick() {
-        // this.figureMoveDown();
+        this.figureMoveDown();
     }
 
     copyFigureToBoard() {
