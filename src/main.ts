@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', (event: Event) => {
     new Game(APP.WIDTH, APP.HEIGHT).init(
         stats,
         (view) => {
-            view.classList.add('game');
-            document.body.appendChild(view);
+            document.getElementById('game').appendChild(view);
         });
 });
