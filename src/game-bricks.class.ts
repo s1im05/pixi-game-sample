@@ -19,7 +19,7 @@ export class GameBricks {
 
     private _tick: number;
 
-    readonly clearColor = COLOR.AERO_GREEN;
+    readonly clearColor = COLOR.WHITE;
     readonly cellGap = 3;
     readonly boardCols = 10;
     readonly boardRows = 20;
@@ -71,7 +71,7 @@ export class GameBricks {
         this.board = new Array(this.boardRows * this.boardCols).fill(null);
         this.stage.addChild(this.boardContainer);
 
-        this.drawBoard();
+        this.drawBoard(true);
         const scale = 3 / 5;
         this.boardContainer.setTransform(
             APP.WIDTH / 2 - this.boardContainer.width / (2 / scale),
@@ -79,18 +79,27 @@ export class GameBricks {
             scale, scale);
     }
 
-    drawBoard() {
+    drawBoard(create?: boolean) {
         for (let i = 0; i < this.boardRows; i++) {
             for (let j = 0; j < this.boardCols; j++) {
 
-                const filled = this.board[i * this.boardCols + j] !== null;
-                const sprite = new Sprite(filled ? this.spriteFill : this.spriteEmpty);
+                const index = i * this.boardCols + j;
+                const filled = this.board[index] !== null;
+                const texture = filled ? this.spriteFill : this.spriteEmpty;
 
-                sprite.anchor.set(0.5);
-                sprite.x = j * (sprite.width + this.cellGap);
-                sprite.y = i * (sprite.height + this.cellGap);
-                sprite.tint = this.clearColor;
-                this.boardContainer.addChild(sprite);
+                if (create) {
+                    const sprite = new Sprite(texture);
+
+                    sprite.anchor.set(0.5);
+                    sprite.x = j * (sprite.width + this.cellGap);
+                    sprite.y = i * (sprite.height + this.cellGap);
+                    sprite.tint = this.clearColor;
+                    this.boardContainer.addChild(sprite);
+                } else {
+                    const sprite = this.boardContainer.getChildAt(index) as Sprite;
+                    sprite.texture = texture;
+                    sprite.tint = filled ? this.board[index] : this.clearColor;
+                }
             }
         }
     }
@@ -99,7 +108,7 @@ export class GameBricks {
         const figure = this.figures[Math.floor(Math.random() * this.figures.length)];
         this.figureCoords = [figure[0][0], figure[0][1]];
         this.figureShape = figure.slice(1);
-        this.figureColor = Math.random() * 0xFFFFFF;
+        this.figureColor = Math.random() * 0xFF6666;
 
         this.drawFigure();
     }
@@ -179,7 +188,14 @@ export class GameBricks {
     }
 
     copyFigureToBoard() {
-        //// copy
+        if (!(this.figureCoords && this.figureShape)) return;
+
+        for (let i = 0; i < this.figureShape.length; i++) {
+            const x = this.figureShape[i][0] + this.figureCoords[0];
+            const y = this.figureShape[i][1] + this.figureCoords[1];
+            this.board[y * this.boardCols + x] = this.figureColor;
+        }
+        this.drawBoard();
         /// check lines
     }
 

@@ -1,9 +1,10 @@
 export const APP = {
-    WIDTH: 1280,
-    HEIGHT: 720
+    WIDTH: 1027,
+    HEIGHT: 768
 };
 
 export const COLOR = {
+    WHITE: 0xFFFFFF,
     BLACK: 0x333333,
     LIVER: 0x695958,
     LAUREL_GREEN: 0xB6C8A9,
