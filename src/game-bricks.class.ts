@@ -18,6 +18,7 @@ export class GameBricks {
     spriteEmpty: Texture;
 
     private _tick: number;
+    private _delay = 300;
 
     readonly clearColor = COLOR.WHITE;
     readonly cellGap = 3;
@@ -50,10 +51,7 @@ export class GameBricks {
     startGame() {
         this.resetBoard();
         this.addRandomFigure();
-
-        this._tick = window.setInterval(() => {
-            this.gameTick();
-        }, 300);
+        this.gameTick();
     }
 
     resetBoard() {
@@ -184,7 +182,10 @@ export class GameBricks {
     }
 
     gameTick() {
-        this.figureMoveDown();
+        this._tick = window.setTimeout(() => {
+            this.figureMoveDown();
+            this.gameTick();
+        }, this._delay);
     }
 
     copyFigureToBoard() {
@@ -200,7 +201,7 @@ export class GameBricks {
     }
 
     destroy() {
-        window.clearInterval(this._tick);
+        window.clearTimeout(this._tick);
         this.stage.destroy();
         document.removeEventListener('keypress', this.handlerKeypress);
     }
