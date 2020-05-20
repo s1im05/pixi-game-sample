@@ -176,6 +176,7 @@ export class GameBricks {
             const y = this.figureShape[i][1] + this.figureCoords[1] + newY;
 
             if (!(x >= 0 && x < this.boardCols && y >= 0 && y < this.boardRows)) return false;
+            if (this.board[y * this.boardCols + x] !== null) return false;
         }
 
         return true;
